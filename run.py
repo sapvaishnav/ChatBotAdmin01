@@ -1,36 +1,15 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
-from flask_migrate import Migrate
 from sys import exit
 from decouple import config
+from app import create_app
+ 
+# Load configuration for the app
+#DEBUG =True # config('DEBUG', default=True, cast=bool)
+#get_config_mode = 'Development' if DEBUG else 'Production'  # Updated line
 
-from apps.config import config_dict
-from apps import create_app, db
+# Create the application instance
+#app_config = config_dict[get_config_mode]  # Ensure you define config_dict in config.py
+app = create_app()
 
-# WARNING: Don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
-
-# The configuration
-get_config_mode = 'Debug' if DEBUG else 'Production'
-
-try:
-
-    # Load the configuration using the default values
-    app_config = config_dict[get_config_mode.capitalize()]
-
-except KeyError:
-    exit('Error: Invalid <config_mode>. Expected values [Debug, Production] ')
-
-app = create_app(app_config)
-Migrate(app, db)
-
-if DEBUG:
-    app.logger.info('DEBUG       = ' + str(DEBUG))
-    app.logger.info('Environment = ' + get_config_mode)
-    app.logger.info('DBMS        = ' + app_config.SQLALCHEMY_DATABASE_URI)
-
+# Run the application
 if __name__ == "__main__":
-    app.run()
+    app.run(port=5001, debug=True)  # Start the application with debug mode

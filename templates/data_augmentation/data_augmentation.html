@@ -1,0 +1,308 @@
+{% extends 'layouts/base.html' %}
+{% block title %} Data Augmentation {% endblock title %}
+{% block content %}
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-2">
+        <div class="col-lg-6 col-7">
+          <h6 class="h2 text-white d-inline-block mb-0">Data Augmentation</h6>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+              <li class="breadcrumb-item active" aria-current="page">Data Augmentation</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--6">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <!-- Card header -->
+        <div class="card-header border-0">
+          <h3 class="mb-0">Data Augmentation</h3>
+        </div>
+                <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="alert alert-dismissible fade show mt-3" role="alert">
+            {% for category, message in messages %}
+              <div class="text-{{ category }}">{{ message | safe }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% endwith %}
+                <div class="card-body">
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs mb-4" id="dataAugmentationTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="documents-tab" data-toggle="tab" href="#documents" role="tab" aria-controls="documents" aria-selected="true">Documents</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="urls-tab" data-toggle="tab" href="#urls" role="tab" aria-controls="urls" aria-selected="false">URLs</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="database-tab" data-toggle="tab" href="#database" role="tab" aria-controls="database" aria-selected="false">Database Connection</a>
+            </li>
+          </ul>
+
+          <!-- Tab content -->
+          <div class="tab-content" id="dataAugmentationTabContent">
+            <!-- Documents tab -->
+            <div class="tab-pane fade show active" id="documents" role="tabpanel" aria-labelledby="documents-tab">
+              <form id="document-upload-form" action="{{ url_for('routes.upload_single_document') }}" method="POST" enctype="multipart/form-data">
+                  <div class="pl-lg-4">
+                      <div class="form-group">
+                          <label for="file-upload" class="form-control-label">Upload Documents (PDF, Excel, DOC, Images, etc.)</label>
+                          <input type="file" name="files" id="file-upload" class="form-control" accept=".pdf,.xls,.xlsx,.doc,.docx,.jpg,.jpeg,.png" multiple required>
+                      </div>
+                      <button type="button" class="btn btn-primary mt-3" id="add-document-btn">Add Document</button>
+                      <input type="hidden" name="documents" value="documents">
+                  </div>
+              </form>
+          
+              <ul id="document-list" class="list-group mt-3">
+                  {% if documents %}
+                      {% for document in documents %}
+                          <li class="list-group-item d-flex justify-content-between align-items-center">
+                              <div>
+                                  {{ document.document_name }}
+                              </div>
+                              <div>
+                                  <form action="{{ url_for('routes.remove_document') }}" method="POST" style="display:inline;">
+                                      <input type="hidden" name="document_id" value="{{ document.doc_id }}">
+                                      <button type="submit" class="btn btn-danger btn-sm remove-document-btn" onclick="return confirm('Are you sure you want to remove this document?');" aria-label="Remove document {{ document.document_name }}">Remove</button>
+                                  </form>
+                              </div>
+                          </li>
+                      {% endfor %}
+                  {% else %}
+                    
+                  {% endif %}
+              </ul>
+            </div>
+           
+
+          <div class="tab-pane fade" id="urls" role="tabpanel" aria-labelledby="urls-tab">
+            <form id="url-form" action="{{ url_for('routes.add_url') }}" method="POST">
+                <div class="pl-lg-4">
+                    <div class="form-group">
+                        <label for="url-input" class="form-control-label">Enter URL Link</label>
+                        <input type="text" id="url-input" name="url-input" class="form-control" placeholder="Enter URL Link" required>
+                        <input type="hidden" name="Urls" value="Urls">
+                        <button type="submit" class="btn btn-primary mt-3" id="add-url-btn">Add URL</button>
+                    </div>
+                </div>  
+            </form>
+        
+  <ul id="url-list" class="list-group mt-3">
+      {% if Urls %}
+          {% for url in Urls %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                      {{ url.url_link }}
+                  </div>
+                  <div>
+                      <form action="{{ url_for('routes.remove_url') }}" method="POST" style="display:inline;">
+                          <input type="hidden" name="url_id" value="{{ url.url_id }}">  <!-- Include URL ID -->
+                          <button type="submit" class="btn btn-danger btn-sm remove-url-btn">Remove</button>
+                      </form>
+                  </div>
+              </li>
+          {% endfor %}
+    
+          
+      {% endif %}
+  </ul>
+</div>
+
+            <!-- Database Connection tab -->
+            <div class="tab-pane fade" id="database" role="tabpanel" aria-labelledby="database-tab">
+              <form id="database-connection-form" action="{{ url_for('routes.add_update_databaseconnection') }}" method="POST">
+                <div class="pl-lg-4">
+                  <div class="row">
+                    <div class="col-lg-4">
+                      <div class="form-group">
+                        <label for="hostname" class="form-control-label">Hostname</label>
+                        <input type="text" name="hostname" id="hostname" class="form-control" placeholder="Enter Hostname" value="{{databaseconnection.hostname}}" required>
+                      </div>
+                    </div>
+                    <div class="col-lg-4">
+                      <div class="form-group">
+                        <label for="port" class="form-control-label">Port</label>
+                        <input type="text" name="port" id="port" class="form-control" placeholder="Enter Port" value="{{databaseconnection.port}}" required>
+                      </div>
+                    </div>
+                    <div class="col-lg-4">
+                      <div class="form-group">
+                        <label for="databasename" class="form-control-label">Database Name</label>
+                        <input type="text" name="databasename" id="databasename" class="form-control" placeholder="Enter Database Name" value="{{databaseconnection.databasename}}" required>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                        <label for="username" class="form-control-label">Username</label>
+                        <input type="text" name="username" id="username" class="form-control" placeholder="Enter Username" value="{{databaseconnection.username}}"  required>
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                        <label for="password" class="form-control-label">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Enter Password"  value="{{databaseconnection.password}}"  required>
+                      </div>
+                    </div>
+                  </div>
+                  <input type="hidden" name="databaseconnection" value="databaseconnection">
+                  <button type="submit" class="btn btn-primary mt-3">Connect to Database</button>
+                </div>
+                
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+ const documentList = document.getElementById('document-list');
+const fileUploadInput = document.getElementById('file-upload');
+
+document.getElementById('add-document-btn').addEventListener('click', function() {
+    const files = fileUploadInput.files; // Get all selected files
+    if (files.length === 0) {
+        alert("Please upload a document before adding.");
+        return;
+    }
+
+    // Iterate over all selected files
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i]; // Get each file
+
+        // Submit the document immediately after adding
+        const formData = new FormData();
+        formData.append('files', file); // Append the single file
+        formData.append('documents', 'documents');
+
+        fetch("{{ url_for('routes.upload_single_document') }}", {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            // Check if the response is okay (status in the range 200-299)
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data); // Log the response data for debugging
+            if (data.success) {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                listItem.textContent = file.name;
+
+                // Create remove button
+                const removeButton = document.createElement('button');
+                removeButton.className = 'btn btn-danger btn-sm remove-document-btn';
+                removeButton.textContent = 'Remove';
+                removeButton.addEventListener('click', function() {
+                    // Remove the list item from the document list
+                    documentList.removeChild(listItem);
+                    alert(`Document ${file.name} removed successfully!`);
+                });
+
+                // Append the button to the list item
+                listItem.appendChild(removeButton);
+                // Append the list item to the document list
+                documentList.appendChild(listItem);
+                alert(`Document ${file.name} submitted successfully!`);
+            } else {
+                alert(`Error: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    // Reset file input
+    fileUploadInput.value = '';
+});
+const urlList = document.getElementById('url-list');
+const urlInput = document.getElementById('url-input');
+
+document.getElementById('add-url-btn').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    const url = urlInput.value.trim(); // Trim whitespace from input
+    if (!url) {
+        alert("Please enter a URL.");
+        return;
+    }
+
+    // Prepare the data to be sent to the server
+    const formData = new FormData();
+    formData.append('url', url); // Assuming the server expects 'url' as a key
+
+    // Send the URL to the server using fetch
+    fetch("{{ url_for('routes.add_url') }}", {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        // Check if the response is okay (status in the range 200-299)
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Response data:', data); // Log the response data for debugging
+
+        if (data.success) {
+            // Create a list item for the new URL
+            const listItem = document.createElement('li');
+            listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+            listItem.textContent = url;
+
+            // Create remove button
+            const removeButton = document.createElement('button');
+            removeButton.className = 'btn btn-danger btn-sm remove-url-btn';
+            removeButton.textContent = 'Remove';
+
+            // Add click event listener to remove button
+            removeButton.addEventListener('click', function() {
+                // Remove the list item from the URL list
+                urlList.removeChild(listItem);
+                alert(`URL ${url} removed successfully!`);
+            });
+
+            // Append the remove button to the list item
+            listItem.appendChild(removeButton);
+            // Append the list item to the URL list
+            urlList.appendChild(listItem);
+            alert(`URL ${url} added successfully!`); // Alert success message
+        } else {
+            alert(`Error: ${data.message}`); // Handle error message from server
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error); // Log any error that occurs
+    });
+
+    // Clear the URL input
+    urlInput.value = '';
+});
+
+</script>
+{% endblock content %}

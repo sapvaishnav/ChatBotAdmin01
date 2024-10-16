@@ -1,0 +1,15 @@
+your_project/
+├── app/
+│   ├── __init__.py           # Application factory and configuration
+│   ├── config.py             # Configuration settings for the app
+│   ├── models.py             # Database models (e.g., Users)
+│   ├── routes.py             # Application routes (views)
+│   ├── templates/            # HTML templates
+│   │   ├── login0.html       # Login page template
+│   │   ├── dashboard.html     # Dashboard template
+│   │   └── other_templates.html  # Other templates
+│   └── static/               # Static files (CSS, JavaScript, images)
+│       ├── styles.css        # Main stylesheet
+│       └── script.js         # JavaScript files
+├── run.py                    # Entry point to start the Flask app
+└── requirements.txt          # Project dependencies

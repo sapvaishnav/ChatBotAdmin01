@@ -1,0 +1,116 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Tables {% endblock title %}
+
+{% block content %}
+
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-2">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">Leads</h6>
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                            <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Leads</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-lg-6 col-5 text-right">
+                    <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <!-- Card header -->
+                <div class="card-header border-0">
+                    <h3 class="mb-0">Leads</h3>
+                </div>
+                <!-- Light table -->
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col" class="sort" data-sort="name">DateTime</th>
+                                <th scope="col" class="sort" data-sort="name">Name</th>
+                                <th scope="col" class="sort" data-sort="budget">Email</th>
+                                <th scope="col" class="sort" data-sort="status">Contact</th>
+                                <th scope="col" class="sort" data-sort="status">IP Address</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+                            {% for lead in leads %}
+                            <tr>
+                                <td class="budget">{{ lead.last_active_combined }}</td>
+                                <td class="budget">{{ lead.username }}</td>
+                                <td class="budget">{{ lead.email }}</td>
+                                <td class="budget">{{ lead.phone_number }}</td>
+                                <td class="budget">{{ lead.ip }}</td>
+                                <td class="text-left">
+                                    <i class="ni ni-bullet-list-67 text-primary action-icon" 
+                                       title="Summary" 
+                                       data-toggle="modal" 
+                                       data-target="#summaryModal" 
+                                       data-chat-summary="{{ lead.chat_summary }}"
+                                       onclick="setChatSummary('{{ lead.chat_summary}}')"></i> &nbsp;&nbsp;
+                                    <i class="ni ni-tv-2 text-primary action-icon" title="Details"></i>
+                                </td>
+ 
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Summary Modal -->
+<div class="modal fade" id="summaryModal" tabindex="-1" role="dialog" aria-labelledby="summaryModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="summaryModalLabel">Lead Summary</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body" id="modalSummaryBody" style="max-height: 400px; overflow-y: auto;">
+              <!-- Chat summary will be inserted here -->
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% include "includes/footer.html" %}
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+<script>
+    function setChatSummary(chatSummary) {
+        document.getElementById('modalSummaryBody').innerText = chatSummary || 'No summary available.';
+    }
+</script>
+{% endblock javascripts %}
+
+<style>
+    .action-icon {
+        padding: 10px; /* Add padding around icons */
+        cursor: pointer; /* Change cursor to pointer */
+    }
+</style>

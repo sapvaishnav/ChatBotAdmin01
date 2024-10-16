@@ -1,0 +1,218 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Bot Configuration {% endblock title %}
+
+{% block content %}
+
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          <h6 class="h2 text-white d-inline-block mb-0">Bot Configuration</h6>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+              <li class="breadcrumb-item active" aria-current="page">Bot Configuration</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <!-- Card header -->
+        <div class="card-header border-0">
+          <h3 class="mb-0">Bot Configuration</h3>
+        </div>
+
+           <!-- Flash Messages -->
+           {% with messages = get_flashed_messages(with_categories=true) %}
+           {% if messages %}
+               <div class="alert alert-dismissible fade show mt-3" role="alert">
+                   {% for category, message in messages %}
+                       <div class="text-{{ category }}">{{ message | safe }}</div>
+                   {% endfor %}
+               </div>
+           {% endif %}
+       {% endwith %}
+        <div class="card-body">
+         
+          <form id="bot-config-form" method="POST" action="{{ url_for('routes.bot_config') }}" enctype="multipart/form-data">
+            <div class="pl-lg-4">
+
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-bot-name">Bot Name</label>
+                    <input type="text" id="input-bot-name" name="input_bot_name" class="form-control" placeholder="Bot Name" value="{{ config.bot_name }}" required>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label"  for="input-bot-avatar">Bot Avatar (Upload Image)</label>
+                    <input type="file" id="input-bot-avatar" name="input_bot_avatar" class="form-control" accept="image/*" onchange="previewImage(event, 'avatar-preview', '{{ config.bot_avatar }}')" >
+                    <img id="avatar-preview" src="{{ config.bot_avatar }}" alt="Bot Avatar Preview" style="display: block; width: 100px; height: 100px; margin-top: 10px;"/>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-workspace-background">Bot Workspace Background (Upload Image)</label>
+                    <input type="file" id="input-workspace-background" name="input_workspace_background" class="form-control" accept="image/*" onchange="previewImage(event, 'background-preview', '{{ config.bot_workspace }}')" >
+                    <img id="background-preview" src="{{ config.bot_workspace }}" alt="Workspace Background Preview" style="display: block; width: 100px; height: 100px; margin-top: 10px;"/>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-model-name">Model Name</label>
+                    <select id="input-model-name" name="input_model_name" class="form-control" required>
+                        <option value="" disabled {% if not config.model_name %} selected {% endif %}>Select a Model</option>
+                        <option value="Mistral: Mixtral-8x7B-Instruct-v0.1" {% if config.model_name == "Mistral: Mixtral-8x7B-Instruct-v0.1" %} selected {% endif %}>Mistral: Mixtral-8x7B-Instruct-v0.1</option>
+                        <option value="Mistral: Mistral-Nemo-Instruct-2407" {% if config.model_name == "Mistral: Mistral-Nemo-Instruct-2407" %} selected {% endif %}>Mistral: Mistral-Nemo-Instruct-2407</option>
+                        <option value="Meta LLaMA: Llama-2-7b-chat-hf" {% if config.model_name == "Meta LLaMA: Llama-2-7b-chat-hf" %} selected {% endif %}>Meta LLaMA: Llama-2-7b-chat-hf</option>
+                        <option value="Meta LLaMA: Meta-Llama-3-8B" {% if config.model_name == "Meta LLaMA: Meta-Llama-3-8B" %} selected {% endif %}>Meta LLaMA: Meta-Llama-3-8B</option>
+                        <option value="Microsoft: Phi-3.5-mini-instruct" {% if config.model_name == "Microsoft: Phi-3.5-mini-instruct" %} selected {% endif %}>Microsoft: Phi-3.5-mini-instruct</option>
+                        <option value="OpenAI: GPT-4o" {% if config.model_name == "OpenAI: GPT-4o" %} selected {% endif %}>OpenAI: GPT-4o</option>
+                        <option value="OpenAI: GPT-4o-mini" {% if config.model_name == "OpenAI: GPT-4o-mini" %} selected {% endif %}>OpenAI: GPT-4o-mini</option>
+                        <option value="OpenAI: GPT-3.5-turbo" {% if config.model_name == "OpenAI: GPT-3.5-turbo" %} selected {% endif %}>OpenAI: GPT-3.5-turbo</option>
+                        <option value="Gemini: Gemini 1.0 Pro" {% if config.model_name == "Gemini: Gemini 1.0 Pro" %} selected {% endif %}>Gemini: Gemini 1.0 Pro</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-model-key">Model Key</label>
+                    <input type="text" id="input-model-key"   name="input_model_key" class="form-control" placeholder="Model Key" value="{{ config.model_key }}" required>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-creativity">Creativity Level (0-1)</label>
+                    <input type="range" id="input-creativity"   name="input_creativity"  class="form-control" min="0" max="1" step="0.01" value="{{ config.creativity }}" oninput="updateCreativityValue(this.value)">
+                    <span id="creativity-value">{{ config.creativity }}</span>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-threshold">Threshold (0-1)</label>
+                    <input type="range" id="input-threshold"   name="input_threshold"  class="form-control" min="0" max="1" step="0.01" value="{{ config.threshold }}" oninput="updateThresholdValue(this.value)">
+                    <span id="threshold-value">{{ config.threshold }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-short-term-memory">Short-Term Memory Length</label>
+                    <input type="number" id="input-short-term-memory" name="input_short_term_memory" class="form-control" placeholder="Short-Term Memory Length" value="{{ config.short_term_memory_length }}" min="1" required>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-max-matching-knowledge">Max Matching Knowledge</label>
+                    <input type="number" id="input-max-matching-knowledge"  name="input_max_matching_knowledge" class="form-control" placeholder="Max Matching Knowledge" value="{{ config.max_matching_knowledge }}" min="1" required>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Greeting Message Section -->
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-greeting-message">Greeting Message</label>
+                    <textarea id="input-greeting-message" class="form-control" name="input_greeting_message" placeholder="Greeting message..." required>{{ config.greeting_message }}</textarea>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-static-message">Static Message</label>
+                    <textarea id="input-static-message" class="form-control"  name="input_static_message" placeholder="Static message..." required>{{ config.static_message }}</textarea>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Integration URL and Script Section -->
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-integration-url">Integration URL</label>
+                    <input type="url" id="input-integration-url" readonly="true"  class="form-control" placeholder="Integration URL" value="{{ config.integration_url }}">
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-custom-script">Integration Script</label>
+                    <textarea id="input-custom-script" readonly="true" class="form-control" placeholder="Custom script...">{{ config.integration_script }}</textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center">
+                <button type="submit" class="btn btn-primary mt-4">Save Changes</button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container-fluid">
+      <div class="row align-items-center justify-content-lg-between">
+        <div class="col-lg-6">
+          <div class="copyright text-center text-lg-left text-muted">
+            &copy; 2024 <a href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Creative Tim</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  function previewImage(event, previewId, defaultImage) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+      document.getElementById(previewId).src = e.target.result;
+    }
+
+    if (file) {
+      reader.readAsDataURL(file);
+    } else {
+      document.getElementById(previewId).src = defaultImage; // Reset to default if no file
+    }
+  }
+
+  function updateCreativityValue(value) {
+    document.getElementById('creativity-value').textContent = value;
+  }
+
+  function updateThresholdValue(value) {
+    document.getElementById('threshold-value').textContent = value;
+  }
+</script>
+
+{% endblock content %}

@@ -1,0 +1,188 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Data Augmentation {% endblock title %}
+
+{% block content %}
+
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-2">
+        <div class="col-lg-6 col-7">
+          <h6 class="h2 text-white d-inline-block mb-0">Data Augmentation</h6>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+              <li class="breadcrumb-item active" aria-current="page">Data Augmentation</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <!-- Card header -->
+        <div class="card-header border-0">
+          <h3 class="mb-0">Data Augmentation</h3>
+        </div>
+        <div class="card-body">
+          <!-- Nav tabs with padding below -->
+          <ul class="nav nav-tabs mb-4" id="dataAugmentationTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="documents-tab" data-toggle="tab" href="#documents" role="tab" aria-controls="documents" aria-selected="true">Documents</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="urls-tab" data-toggle="tab" href="#urls" role="tab" aria-controls="urls" aria-selected="false">URLs</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="database-tab" data-toggle="tab" href="#database" role="tab" aria-controls="database" aria-selected="false">Database Connection</a>
+            </li>
+          </ul>
+
+          <!-- Tab content -->
+          <div class="tab-content" id="dataAugmentationTabContent">
+            <!-- Documents tab -->
+            <div class="tab-pane fade show active" id="documents" role="tabpanel" aria-labelledby="documents-tab">
+              <form id="document-upload-form">
+                <div class="pl-lg-4">
+                  <div class="form-group">
+                    <label for="file-upload" class="form-control-label">Upload Documents (PDF, Excel, DOC, Images, etc.)</label>
+                    <input type="file" id="file-upload" class="form-control" accept=".pdf,.xls,.xlsx,.doc,.docx,.jpg,.jpeg,.png" multiple>
+                  </div>
+                  <ul id="uploaded-documents" class="list-group mt-3">
+                    <!-- Uploaded documents will be listed here -->
+                  </ul>
+                  <button type="button" class="btn btn-primary mt-3" id="add-document-btn">Add Document</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- URLs tab -->
+            <div class="tab-pane fade" id="urls" role="tabpanel" aria-labelledby="urls-tab">
+              <form id="url-form">
+                <div class="pl-lg-4">
+                  <div class="form-group">
+                    <label for="url-input" class="form-control-label">Enter URL Link</label>
+                    <input type="text" id="url-input" class="form-control" placeholder="Enter URL Link">
+                    <button type="button" class="btn btn-primary mt-3" id="add-url-btn">Add URL</button>
+                  </div>
+                  <ul id="url-list" class="list-group mt-3">
+                    <!-- URL links will be listed here -->
+                  </ul>
+                </div>
+              </form>
+            </div>
+
+            <!-- Database Connection tab -->
+            <div class="tab-pane fade" id="database" role="tabpanel" aria-labelledby="database-tab">
+              <form id="database-connection-form">
+                <!-- First row for Hostname, Port, Database Name -->
+                <div class="row">
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label for="hostname" class="form-control-label">Hostname</label>
+                      <input type="text" id="hostname" class="form-control" placeholder="Enter Hostname">
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label for="port" class="form-control-label">Port</label>
+                      <input type="text" id="port" class="form-control" placeholder="Enter Port">
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label for="databasename" class="form-control-label">Database Name</label>
+                      <input type="text" id="databasename" class="form-control" placeholder="Enter Database Name">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Second row for Username and Password -->
+                <div class="row">
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="username" class="form-control-label">Username</label>
+                      <input type="text" id="username" class="form-control" placeholder="Enter Username">
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="password" class="form-control-label">Password</label>
+                      <input type="password" id="password" class="form-control" placeholder="Enter Password">
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('add-document-btn').addEventListener('click', function() {
+    const fileInput = document.getElementById('file-upload');
+    const uploadedDocumentsList = document.getElementById('uploaded-documents');
+    const files = fileInput.files;
+
+    if (files.length === 0) {
+      alert("Please select files to upload.");
+      return;
+    }
+
+    for (let i = 0; i < files.length; i++) {
+      const listItem = document.createElement('li');
+      listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+      listItem.textContent = files[i].name;
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'btn btn-danger btn-sm';
+      removeBtn.textContent = 'Remove';
+      removeBtn.onclick = function() {
+        uploadedDocumentsList.removeChild(listItem);
+      };
+      listItem.appendChild(removeBtn);
+      uploadedDocumentsList.appendChild(listItem);
+    }
+
+    fileInput.value = ''; // Clear file input
+  });
+
+  document.getElementById('add-url-btn').addEventListener('click', function() {
+    const urlInput = document.getElementById('url-input');
+    const urlList = document.getElementById('url-list');
+    const urlValue = urlInput.value.trim();
+
+    if (urlValue === '') {
+      alert("Please enter a URL.");
+      return;
+    }
+
+    const listItem = document.createElement('li');
+    listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+    listItem.textContent = urlValue;
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'btn btn-danger btn-sm';
+    removeBtn.textContent = 'Remove';
+    removeBtn.onclick = function() {
+      urlList.removeChild(listItem);
+    };
+    listItem.appendChild(removeBtn);
+    urlList.appendChild(listItem);
+    urlInput.value = ''; // Clear URL input
+  });
+</script>
+
+{% endblock content %}

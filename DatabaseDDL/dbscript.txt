@@ -1,0 +1,216 @@
+-- db_ai_chatbot.chatbot_agent definition
+
+CREATE TABLE `chatbot_agent` (
+  `agent_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone_number` varchar(20) DEFAULT NULL,
+  `status` varchar(10) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `username` varchar(100) DEFAULT NULL,
+  `password_hash` varchar(100) DEFAULT NULL,
+  `tenant_id` int DEFAULT NULL,
+  `del_flg` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`agent_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+-- db_ai_chatbot.chatbot_botconfiguration definition
+
+CREATE TABLE `chatbot_botconfiguration` (
+  `config_id` int NOT NULL AUTO_INCREMENT,
+  `tenant_id` int DEFAULT NULL,
+  `config_key` varchar(255) NOT NULL,
+  `config_value` text NOT NULL,
+  `description` text,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `del_flg` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`config_id`),
+  KEY `fk_tenant_id` (`tenant_id`),
+  CONSTRAINT `fk_tenant_id` FOREIGN KEY (`tenant_id`) REFERENCES `chatbot_tenants` (`tenant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- db_ai_chatbot.chatbot_conversation definition
+
+CREATE TABLE `chatbot_conversation` (
+  `conversation_id` varchar(20) NOT NULL,
+  `chat_summary` longtext NOT NULL,
+  `started_at` datetime(6) NOT NULL,
+  `ended_at` datetime(6) DEFAULT NULL,
+  `transferred_at` datetime(6) DEFAULT NULL,
+  `agent_id` int DEFAULT NULL,
+  `user_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `del_flg` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`conversation_id`),
+  KEY `chatbot_conversation_user_id_id_a35284a3_fk_chatbot_lead_user_id` (`user_id`),
+  KEY `chatbot_conversation_agent_id_id_2a4554ef_fk_chatbot_a` (`agent_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- db_ai_chatbot.chatbot_database_connection definition
+
+CREATE TABLE `chatbot_database_connection` (
+  `db_id` varchar(24) NOT NULL,
+  `hostname` varchar(255) NOT NULL,
+  `databasename` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `db_status` varchar(255) NOT NULL,
+  `tenant_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `del_flg` tinyint(1) DEFAULT NULL,
+  `port` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`db_id`),
+  KEY `database_connection_tenant_id_id_df4ae677_fk_tenants_tenant_id` (`tenant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- db_ai_chatbot.chatbot_documents definition
+
+CREATE TABLE `chatbot_documents` (
+  `doc_id` varchar(24) NOT NULL,
+  `document_name` varchar(255) NOT NULL,
+  `document_type` varchar(255) NOT NULL,
+  `document_status` varchar(255) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `tenant_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `del_flg` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`doc_id`),
+  KEY `documents_tenant_id_id_6e956d99_fk_tenants_tenant_id` (`tenant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- db_ai_chatbot.chatbot_error definition
+
+CREATE TABLE `chatbot_error` (
+  `error_id` int NOT NULL AUTO_INCREMENT,
+  `error_message` longtext NOT NULL,
+  `error_code` varchar(50) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `tenant_id` int DEFAULT NULL,
+  PRIMARY KEY (`error_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- db_ai_chatbot.chatbot_lead definition
+
+CREATE TABLE `chatbot_lead` (
+  `user_id` varchar(20) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone_number` varchar(20) NOT NULL,
+  `last_active` datetime(6) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `tenant_id` int DEFAULT NULL,
+  `ip` varchar(50) DEFAULT NULL,
+  `del_flg` tinyint(1) DEFAULT NULL,
+  `all_http_details` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+-- db_ai_chatbot.chatbot_loginuser definition
+
+CREATE TABLE `chatbot_loginuser` (
+  `login_id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(20) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `tenant_id` int DEFAULT NULL,
+  `role` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`login_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+-- db_ai_chatbot.chatbot_message definition
+
+CREATE TABLE `chatbot_message` (
+  `message_id` int NOT NULL AUTO_INCREMENT,
+  `message_type` varchar(10) NOT NULL,
+  `message_content` longtext NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `conversation_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `message_content_type` varchar(100) DEFAULT NULL,
+  `del_flg` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`message_id`),
+  KEY `chatbot_message_conversation_id_id_80d6ca3c_fk_chatbot_c` (`conversation_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=966 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- db_ai_chatbot.chatbot_plans definition
+
+CREATE TABLE `chatbot_plans` (
+  `plan_id` int NOT NULL,
+  `plan_name` varchar(255) NOT NULL,
+  `plan_price` decimal(10,2) NOT NULL,
+  `plan_duration` int NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `del_flg` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`plan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- db_ai_chatbot.chatbot_tenants definition
+
+CREATE TABLE `chatbot_tenants` (
+  `tenant_id` int NOT NULL,
+  `tenant_name` varchar(255) NOT NULL,
+  `tenant_key` varchar(255) NOT NULL,
+  `tenant_address` varchar(255) NOT NULL,
+  `tenant_emailid` varchar(255) NOT NULL,
+  `tenant_contact` varchar(20) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `tenant_emailid_verify` tinyint(1) DEFAULT NULL,
+  `tenant_GSTNNo` varchar(100) DEFAULT NULL,
+  `tenant_PAN` varchar(100) DEFAULT NULL,
+  `del_flg` tinyint(1) DEFAULT NULL,
+  `tenant_city` varchar(100) DEFAULT NULL,
+  `tenant_country` varchar(100) DEFAULT NULL,
+  `tenant_postcode` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`tenant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- db_ai_chatbot.chatbot_urls definition
+
+CREATE TABLE `chatbot_urls` (
+  `url_id` varchar(24) NOT NULL,
+  `url_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `url_status` varchar(255) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `tenant_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `del_flg` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`url_id`),
+  KEY `urls_tenant_id_id_6a0bd54c_fk_tenants_tenant_id` (`tenant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- db_ai_chatbot.chatbot_user_subscriptions definition
+
+CREATE TABLE `chatbot_user_subscriptions` (
+  `subscription_id` int NOT NULL,
+  `tenant_id` int DEFAULT NULL,
+  `plan_id` int DEFAULT NULL,
+  `subscription_start` datetime NOT NULL,
+  `subscription_end` datetime NOT NULL,
+  `auto_renewal` tinyint(1) DEFAULT '0',
+  `remaining_credits` int DEFAULT NULL,
+  `total_plan_credits` tinyint(1) DEFAULT NULL,
+  `del_flg` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`subscription_id`),
+  KEY `plan_id` (`plan_id`),
+  KEY `tenant_id` (`tenant_id`),
+  CONSTRAINT `chatbot_user_subscriptions_ibfk_1` FOREIGN KEY (`plan_id`) REFERENCES `chatbot_plans` (`plan_id`),
+  CONSTRAINT `chatbot_user_subscriptions_ibfk_2` FOREIGN KEY (`tenant_id`) REFERENCES `chatbot_tenants` (`tenant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

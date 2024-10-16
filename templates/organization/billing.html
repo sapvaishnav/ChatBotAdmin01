@@ -1,0 +1,70 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Bot Configuration {% endblock title %}
+
+{% block content %}
+
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-2">
+        <div class="col-lg-6 col-7">
+          <h6 class="h2 text-white d-inline-block mb-0">Billing and Usage</h6>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+              <li class="breadcrumb-item active" aria-current="page">Billing and Usage</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <!-- Card header -->
+        <div class="card-header border-0">
+          <h3 class="mb-0">Billing and Usage</h3>
+        </div>
+        <div class="card-body">
+         
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Page content -->
+
+{% include "includes/footer.html" %}
+
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+<script>
+  function makeReadOnly(event) {
+    // Prevent the default form submission
+    event.preventDefault();
+
+    // Set Integration URL and Integration Script fields to read-only
+    document.getElementById('input-integration-url').readOnly = true;
+    document.getElementById('input-integration-script').readOnly = true;
+    
+    // Additional logic to handle form submission can go here if necessary
+  }
+
+  function updateCreativityValue(value) {
+    document.getElementById('creativity-value').textContent = value;
+  }
+
+  function updateThresholdValue(value) {
+    document.getElementById('threshold-value').textContent = value;
+  }
+</script>
+{% endblock javascripts %}

@@ -1,0 +1,101 @@
+<nav class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-white" id="sidenav-main">
+  <div class="scrollbar-inner">
+    <!-- Brand -->
+    <div class="sidenav-header align-items-center">
+      <a class="navbar-brand" href="{{ url_for('routes.index') }}">
+        <img src="{{ url_for('static', filename='assets/img/brand/blue.png') }}" class="navbar-brand-img" alt="Argon Design - Jinja Template Logo.">
+      </a>
+    </div>
+    
+    <div class="navbar-inner">
+      <!-- Collapse -->
+      <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+        <!-- Nav items -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == url_for('routes.index') %} active {% endif %}" href="{{ url_for('routes.dashboard') }}">
+              <i class="ni ni-tv-2 text-primary"></i>
+              <span class="nav-link-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == url_for('routes.leads') %} active {% endif %}" href="{{ url_for('routes.leads') }}">
+              <i class="ni ni-planet text-orange"></i>
+              <span class="nav-link-text">Leads</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == url_for('routes.data_augmentation') %} active {% endif %}" href="{{ url_for('routes.data_augmentation') }}">
+              <i class="ni ni-ruler-pencil text-primary"></i>
+              <span class="nav-link-text">Data Augmentation</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == url_for('routes.agents') %} active {% endif %}" href="{{ url_for('routes.agents') }}">
+              <i class="ni ni-single-02 text-yellow"></i>
+              <span class="nav-link-text">Agent Profiles</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == url_for('routes.bot_config') %} active {% endif %}" href="{{ url_for('routes.bot_config') }}">
+              <i class="ni ni-settings-gear-65 text-default"></i>
+              <span class="nav-link-text">Bot Configuration</span>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {% if request.path in [url_for('routes.smart_chat'), url_for('routes.quick_chat'), url_for('routes.sidebar_chat')] %} active {% endif %}" href="#" id="chatDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="ni ni-chat-round text-default"></i>
+              <span class="nav-link-text">Chat Bot</span>
+              <i class="ni ni-bold-right text-muted ml-auto"></i> <!-- Dropdown arrow -->
+            </a>
+            <div class="dropdown-menu" aria-labelledby="chatDropdown">
+              <a class="dropdown-item {% if request.path == url_for('routes.smart_chat') %} active {% endif %}" href="{{ url_for('routes.smart_chat') }}">
+                <i class="ni ni-chat-round text-info"></i> Smart Chat
+              </a>
+              <a class="dropdown-item {% if request.path == url_for('routes.quick_chat') %} active {% endif %}" href="{{ url_for('routes.quick_chat') }}">
+                <i class="ni ni-chat-round text-success"></i> Quick Chat
+              </a>
+              <a class="dropdown-item {% if request.path == url_for('routes.sidebar_chat') %} active {% endif %}" href="{{ url_for('routes.sidebar_chat') }}">
+                <i class="ni ni-chat-round text-warning"></i> Sidebar
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == url_for('routes.billing') %} active {% endif %}" href="{{ url_for('routes.billing') }}">
+              <i class="ni ni-credit-card text-info"></i>
+              <span class="nav-link-text">Billing & Usage</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == url_for('routes.reports') %} active {% endif %}" href="{{ url_for('routes.reports') }}">
+              <i class="ni ni-bullet-list-67 text-warning"></i>
+              <span class="nav-link-text">Reports</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == url_for('routes.org_profile') %} active {% endif %}" href="{{ url_for('routes.org_profile') }}">
+              <i class="ni ni-building text-dark"></i>
+              <span class="nav-link-text">Organization Info</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('routes.logout') }}">
+              <i class="ni ni-user-run text-red"></i>
+              <span class="nav-link-text">Logout</span>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Support Navigation -->
+        <ul class="navbar-nav mb-md-3">
+          <li class="nav-item">
+            <a class="nav-link active active-pro" target="_self" href="{{ url_for('routes.support') }}">
+              <i class="ni ni-support-16 text-dark"></i>
+              <span class="nav-link-text">Support</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
